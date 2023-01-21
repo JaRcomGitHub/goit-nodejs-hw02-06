@@ -9,27 +9,27 @@ const authMiddleware = async (req, res, next) => {
   try {
     const { authorization } = req.headers;
     if (!authorization) {
-      //"Please, provide a token in request authorization header"
+      // "Please, provide a token in request authorization header"
       return res.status(401).json({ message: "Not authorized1" });
     }
 
-    const [, token] = authorization.split(" ");
-    if (!token) {
-      //"Please, provide a token"
+    const [TypeToken, token] = authorization.split(" ");
+    if (TypeToken !== "Bearer" || !token) {
+      // "Please, provide a token"
       return res.status(401).json({ message: "Not authorized2" });
     }
 
     const decodeToken = jwt.verify(token, JWT_SECRET);
     const id = decodeToken.id;
-    //console.log({ decodeTokenId: id });
+    // console.log({ decodeTokenId: id });
     if (!id) {
-      //"token not have id"
+      // "token not have id"
       return res.status(401).json({ message: "Not authorized3" });
     }
 
     const storedUser = await User.findById(id);
     if (!storedUser) {
-      //"user not exist"
+      // "user not exist"
       return res.status(401).json({ message: "Not authorized4" });
     }
 
@@ -40,8 +40,8 @@ const authMiddleware = async (req, res, next) => {
     req.user = storedUser;
     next();
   } catch (err) {
-    //console.error("authM err:", err);
-    //"Invalid token"
+    // console.error("authM err:", err);
+    // "Invalid token"
     return res.status(401).json({ message: "Not authorized" });
   }
 };

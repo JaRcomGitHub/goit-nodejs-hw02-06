@@ -30,7 +30,7 @@ async function signup(req, res, next) {
     if (error.message.includes("E11000 duplicate key error")) {
       return res.status(409).json({ message: "Email in use" });
     }
-    return res.status(500).json({ message: error.message }); //throw error;
+    return res.status(500).json({ message: error.message }); // throw error;
   }
 }
 
