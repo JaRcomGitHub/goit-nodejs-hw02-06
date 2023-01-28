@@ -1,8 +1,6 @@
 const jwt = require("jsonwebtoken");
-const dotenv = require("dotenv");
 const { User } = require("../schemas/user");
 
-dotenv.config();
 const { JWT_SECRET } = process.env;
 
 const authMiddleware = async (req, res, next) => {
