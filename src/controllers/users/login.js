@@ -2,9 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { User } = require("../../schemas/user");
 const { schemaAuth } = require("../../schemas/validation");
-const dotenv = require("dotenv");
 
-dotenv.config();
 const { JWT_SECRET } = process.env;
 
 async function login(req, res, next) {
