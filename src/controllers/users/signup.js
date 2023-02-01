@@ -4,9 +4,9 @@ const { schemaAuth } = require("../../schemas/validation");
 const gravatar = require("gravatar");
 const sendGrid = require("@sendgrid/mail");
 const { v4 } = require("uuid");
+const createEmail = require("./createEmail");
 
 const { SENDGRID_API_KEY } = process.env;
-const { PORT } = process.env;
 
 async function signup(req, res, next) {
   const { email, password } = req.body;
@@ -32,20 +32,8 @@ async function signup(req, res, next) {
     console.log("signupUser", savedUser);
 
     sendGrid.setApiKey(SENDGRID_API_KEY);
-
-    const confirmLink = `localhost:${PORT}/users/verify/${verifyToken}`;
-    const sendEmail = {
-      from: "jarcom@ukr.net",
-      to: "jarcom@ukr.net",
-      subject: "Please confirm your email",
-      html: `<a href="${confirmLink}">Confirm your email</a>
-              <p>go to link ${confirmLink}</p>`,
-      text: `go to link ${confirmLink}`,
-    };
-
-    const response = await sendGrid.send(sendEmail);
-    console.log(response);
-    //return res.status(201).json({ m: "test" });
+    const response = await sendGrid.send(createEmail(email, verificationToken));
+    // console.log(response);
 
     return res.status(201).json({
       user: {
