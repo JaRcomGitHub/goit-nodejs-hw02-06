@@ -1,10 +1,7 @@
 const { User } = require("../../schemas/user");
-const { v4 } = require("uuid");
-const sendGrid = require("@sendgrid/mail");
-const createEmail = require("./createEmail");
 const { schemaEmail } = require("../../schemas/validation");
-
-const { SENDGRID_API_KEY } = process.env;
+const { v4 } = require("uuid");
+const sendEmail = require("../../servises/email");
 
 async function resendEmail(req, res, next) {
   const { email } = req.body;
@@ -39,9 +36,7 @@ async function resendEmail(req, res, next) {
   });
 
   try {
-    sendGrid.setApiKey(SENDGRID_API_KEY);
-    const response = await sendGrid.send(createEmail(email, verificationToken));
-    // console.log(response);
+    sendEmail(email, verificationToken);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

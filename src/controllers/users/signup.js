@@ -2,11 +2,8 @@ const bcrypt = require("bcrypt");
 const { User } = require("../../schemas/user");
 const { schemaAuth } = require("../../schemas/validation");
 const gravatar = require("gravatar");
-const sendGrid = require("@sendgrid/mail");
 const { v4 } = require("uuid");
-const createEmail = require("./createEmail");
-
-const { SENDGRID_API_KEY } = process.env;
+const sendEmail = require("../../servises/email");
 
 async function signup(req, res, next) {
   const { email, password } = req.body;
@@ -31,9 +28,7 @@ async function signup(req, res, next) {
     });
     console.log("signupUser", savedUser);
 
-    sendGrid.setApiKey(SENDGRID_API_KEY);
-    const response = await sendGrid.send(createEmail(email, verificationToken));
-    // console.log(response);
+    sendEmail(email, verificationToken);
 
     return res.status(201).json({
       user: {
